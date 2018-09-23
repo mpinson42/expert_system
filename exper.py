@@ -62,7 +62,7 @@ def set_true_value(table):
 				sys.exit()
 			i = i.split(',');
 			for val in i:
-				if('!' in val or '(' in val or ')' in val or ' ' in val):
+				if('!' in val or '(' in val or ')' in val or ' ' in val or len(val) == 0):
 					print 'error ='
 					sys.exit()
 				if((val in true_value) == False):
@@ -85,7 +85,7 @@ def set_chr_value(table):
 				sys.exit()
 			i = i.split(',');
 			for val in i:
-				if(val[0] == '!'):
+				if('!' in val or '(' in val or ')' in val or ' ' in val or len(val) == 0):
 					print 'error ?'
 					sys.exit()
 				if((val in true_value) == False):
@@ -111,7 +111,9 @@ def parsing_corp(table, true_value):
 		count = 0
 		#print condition;
 		for verif in condition:
-
+			if(',' in verif):
+				print 'erreur parsing'
+				sys.exit()
 			if verif == '':
 				continue
 
