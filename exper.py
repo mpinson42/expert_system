@@ -62,7 +62,7 @@ def set_true_value(table):
 				sys.exit()
 			i = i.split(',');
 			for val in i:
-				if(val[0] == '!'):
+				if('!' in val or '(' in val or ')' in val or ' ' in val):
 					print 'error ='
 					sys.exit()
 				if((val in true_value) == False):
@@ -116,8 +116,10 @@ def parsing_corp(table, true_value):
 				continue
 
 			if(count % 2 == 0):
-				if(verif[0] == '!'):
+				if(verif[0] == '!' or verif[0] == '('):
 					verif = verif [ 1:]
+				if(len(verif) != 1 and verif[len(verif) - 1] == ')'):
+					verif = verif [:len(verif)-1]
 				
 
 
