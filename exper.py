@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 import sys
+import inferences
+from inferences import solve
+
 from pprint import pprint
 
 def is_printing(char):
@@ -158,3 +161,4 @@ if ( __name__ == "__main__"):
 	print false_char 	 #valeur fause
 	print chr_value 	 #les valeur qu'on cherche
 	print table 		 #les ligne a executer au fur est a mesur, elle sont tout vrais !
+	solve()
