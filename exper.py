@@ -65,7 +65,7 @@ def set_true_value(table):
 				sys.exit()
 			i = i.split(',');
 			for val in i:
-				if('!' in val or '(' in val or ')' in val or ' ' in val or len(val) == 0):
+				if('!' in val or '(' in val or ')' in val or '+' in val or '^' in val or '|' in val or ' ' in val or len(val) == 0):
 					print 'error ='
 					sys.exit()
 				if((val in true_value) == False):
@@ -88,7 +88,7 @@ def set_chr_value(table):
 				sys.exit()
 			i = i.split(',');
 			for val in i:
-				if('!' in val or '(' in val or ')' in val or ' ' in val or len(val) == 0):
+				if('!' in val or '(' in val or ')' in val or '+' in val or '^' in val or '|' in val or ' ' in val or len(val) == 0):
 					print 'error ?'
 					sys.exit()
 				if((val in true_value) == False):
@@ -121,14 +121,22 @@ def parsing_corp(table, true_value):
 				continue
 
 			if(count % 2 == 0):
-				if(verif[0] == '!' or verif[0] == '('):
+				while(verif[0] == '!' or verif[0] == '('):
 					verif = verif [ 1:]
-				if(len(verif) != 1 and verif[len(verif) - 1] == ')'):
+					if(len(verif) == 0):
+						print "error parsing"
+						sys.exit()
+				if(len(verif) >= 1 and verif[len(verif) - 1] == ')'):
 					verif = verif [:len(verif)-1]
+
+
 				
 
 
 				if (verif in true_value) == False  and (verif in false_value) == False :
+					if('(' in verif or ')' in verif or '+' in verif or '^' in verif or '|' in verif or ' ' in verif or len(verif) == 0):
+						print 'error var'
+						sys.exit()
 					false_value.append(verif)
 
 			else:
@@ -142,7 +150,12 @@ def parsing_corp(table, true_value):
 
 
 
-
+def braket(tab):
+	for var in tab:
+		var = var.split("=>")
+		if(var[0].count('(') != var[0].count(')') or var[1].count('(') != var[1].count(')')):
+			print "error braket"
+			sys.exit()
 
 
 
@@ -153,16 +166,30 @@ def false_char_in_chr(chr_value, false_value,true_value):
 	return(false_value)
 
 
+def format(tab):
+	i = 0
+	while(i < len(tab)):
+		tab[i] = tab[i].replace("!", " ! ")
+		tab[i] = tab[i].replace("(", " ( ")
+		tab[i] = tab[i].replace(")", " ) ")
+		tab[i] = ' '.join(tab[i].split())
+		print tab[i]
+		i += 1
+	return(tab)
+
+
 if ( __name__ == "__main__"):
 	table = init_table()
 	true_value = set_true_value(table)
 	chr_value = set_chr_value(table)
 	false_char = parsing_corp(table, true_value)
 	false_char = false_char_in_chr(chr_value, false_char, true_value)
+	braket(table)
+	table = format(table)
 
 	#print text
 	print true_value     #valeur vrais
 	print false_char 	 #valeur fause
 	print chr_value 	 #les valeur qu'on cherche
 	print table 		 #les ligne a executer au fur est a mesur, elle sont tout vrais !
-	solve()
+	#solve()
