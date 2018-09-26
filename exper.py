@@ -102,7 +102,9 @@ def set_chr_value(table):
 def parsing_corp(table, true_value):
 	false_value = []
 	for i in table:
-		split = i.split("=>")
+		split = i.split("<=>")
+		if(len(split) == 1):
+			split = i.split("=>")
 		if len(split) == 1:
 			print "erreur parsing =>"
 			sys.exit()
@@ -126,7 +128,7 @@ def parsing_corp(table, true_value):
 					if(len(verif) == 0):
 						print "error parsing"
 						sys.exit()
-				if(len(verif) >= 1 and verif[len(verif) - 1] == ')'):
+				while(len(verif) >= 1 and verif[len(verif) - 1] == ')'):
 					verif = verif [:len(verif)-1]
 
 
@@ -172,8 +174,15 @@ def format(tab):
 		tab[i] = tab[i].replace("!", " ! ")
 		tab[i] = tab[i].replace("(", " ( ")
 		tab[i] = tab[i].replace(")", " ) ")
+		if(tab[i].count("<=>") == 1):
+			tab[i] = tab[i].replace("<=>", " <=> ")
+		elif (tab[1].count("=>") == 1):
+			tab[i] = tab[i].replace("=>", " => ")
+		else:
+			print "error"
+			sys.exit()
+
 		tab[i] = ' '.join(tab[i].split())
-		print tab[i]
 		i += 1
 	return(tab)
 
