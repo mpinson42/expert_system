@@ -99,6 +99,42 @@ def set_chr_value(table):
 		sys.exit()
 	return true_value
 
+
+def parsing_corp_core(true_value, split, false_value):
+	split = ' '.join(split.split())
+	condition = split.split(' ');
+	count = 0
+	#print condition;
+	for verif in condition:
+		if(',' in verif):
+			print 'erreur parsing'
+			sys.exit()
+		if verif == '':
+			continue
+
+		if(count % 2 == 0):
+			while(verif[0] == '!' or verif[0] == '('):
+				verif = verif [ 1:]
+				if(len(verif) == 0):
+					print "error parsing"
+					sys.exit()
+			while(len(verif) >= 1 and verif[len(verif) - 1] == ')'):
+				verif = verif [:len(verif)-1]
+			if (verif in true_value) == False  and (verif in false_value) == False :
+				if('(' in verif or ')' in verif or '+' in verif or '^' in verif or '|' in verif or ' ' in verif or len(verif) == 0):
+					print 'error var'
+					sys.exit()
+				false_value.append(verif)
+
+		else:
+			if verif != '+' and verif != '|' and verif != '^' and verif != '':
+				print "erreur parsing"
+				sys.exit()
+		count += 1
+	return (false_value);
+
+
+
 def parsing_corp(table, true_value):
 	false_value = []
 	for i in table:
@@ -108,44 +144,8 @@ def parsing_corp(table, true_value):
 		if len(split) == 1:
 			print "erreur parsing =>"
 			sys.exit()
-		split[0] = ' '.join(split[0].split())
-		condition = split[0].split(' ');
-
-		#condition.remove('')
-
-		count = 0
-		#print condition;
-		for verif in condition:
-			if(',' in verif):
-				print 'erreur parsing'
-				sys.exit()
-			if verif == '':
-				continue
-
-			if(count % 2 == 0):
-				while(verif[0] == '!' or verif[0] == '('):
-					verif = verif [ 1:]
-					if(len(verif) == 0):
-						print "error parsing"
-						sys.exit()
-				while(len(verif) >= 1 and verif[len(verif) - 1] == ')'):
-					verif = verif [:len(verif)-1]
-
-
-				
-
-
-				if (verif in true_value) == False  and (verif in false_value) == False :
-					if('(' in verif or ')' in verif or '+' in verif or '^' in verif or '|' in verif or ' ' in verif or len(verif) == 0):
-						print 'error var'
-						sys.exit()
-					false_value.append(verif)
-
-			else:
-				if verif != '+' and verif != '|' and verif != '^' and verif != '':
-					print "erreur parsing"
-					sys.exit()
-			count += 1
+		false_value = parsing_corp_core(true_value, split[0], false_value)
+		false_value = parsing_corp_core(true_value, split[1], false_value)
 	return (false_value);
 
 
