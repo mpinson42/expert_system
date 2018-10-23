@@ -100,8 +100,8 @@ def applyImplication(premice, stated_true_value_table, stated_false_value_table,
 
 
 def solve(premice_table, stated_true_value_table, stated_false_value_table, searched_value_table):
-#    checkForContradiction(stated_true_value_table, stated_false_value_table)
+    checkForContradiction(stated_true_value_table, stated_false_value_table)
 
-#   for premice in premice_table:
-#        applyImplication(premice, stated_true_value_table, stated_false_value_table, searched_value_table)
+    for premice in premice_table:
+        applyImplication(premice, stated_true_value_table, stated_false_value_table, searched_value_table)
     print "Solved"
