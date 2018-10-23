@@ -176,7 +176,7 @@ def format(tab):
 		if(tab[i].count("<=>") == 1):
 			tab[i] = tab[i].replace("<=>", " = ")
 		elif (tab[i].count("=>") == 1):
-			tab[i] = tab[i].replace("=>", " = > ")
+			tab[i] = tab[i].replace("=>", " > ")
 		else:
 			print "error"
 			sys.exit()
