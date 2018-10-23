@@ -1,0 +1,110 @@
+-------------------------------------------------------------- 
+B => A 
+D + E => B 
+G + H => F 
+I + J => G 
+G => H 
+L + M => K 
+O + P => L + N 
+N => M 
+
+?AFKP 
+
+=DEIJOP# AFKP is true. 
+=DEIJP# AFP is true# K is false. 
+---------------------------------------------------
+B + C => A 
+D | E => B 
+B => C 
+
+?A 
+
+=# A should be false. 
+=D# A should be true. 
+=E# A should be true. 
+=DE# A should be true. 
+---------------------------------------------------
+
+B + C => A 
+D ^ E => B 
+B => C 
+ 
+?A 
+
+=# A should be false. 
+=D# A should be true. 
+=E# A should be true. 
+=DE# A should be false. 
+-------------------------------------------------
+B + !C => A 
+ 
+?A 
+
+=# A should be false. 
+=B# A should be true. 
+=C# A should be false. 
+=BC# A should be false. 
+-------------------------------------------------------
+B => A 
+C => A 
+
+?A 
+
+=# A should be false. 
+=B# A should be true. 
+=C# A should be true. 
+=BC# A should be true. 
+-------------------------------------------------------
+
+A | B + C => E 
+(F | G) + H => E 
+ 
+?E 
+
+=# E should be false. 
+
+=A# E should be true. 
+=B# E should be false. 
+=C# E should be false. 
+=AC# E should be false. 
+=BC# E should be true. 
+
+=F# E should be false. 
+=G# E should be false. 
+=H# E should be false. 
+=FH# E should be true. 
+=GH# E should be true.
+--------------------------------------------------- 
+
+Data structures
+
+Facts and rules storage
+
+The students must have chosen a relevant data structure to handle their rules and facts. 
+
+- A global graph of fact nodes linked by rule nodes is worth 5 
+- A separate graph for each rule is worth 3 
+- Anything else that is still more efficient than simple lists of facts and rules is worth 2 
+- Lists of facts and rules are worth 1 
+- Anything worse than that is worth 0 
+
+Of course# the students must justify their choice. If they do not# their work is worth 0. 
+Rate it from 0 (failed) through 5 (excellent)
+Bonuses
+
+Bonuses
+
+Any distinct and identifiable bonus that the students can show and prove working is worth 1. 
+
+Just in case# here are the bonuses that the subject suggests (Of course# it is still OK if they did something else# just make sure it is actually vaguely useful and not just a gimmick): 
+
+- Interactive fact validation in case of undetermined facts or just to fiddle the input while running 
+- Visualization of the reasoning process# either a GUI or a terminal interface# or even text# whatever# as long as it is comprehensible 
+- "OR" and "XOR" in conclusions. This can lead to undetermined facts# and should also allow for negations in conclusions to be useful. 
+- Biconditional rules ("If-and-only-if"). 
+Rate it from 0 (failed) through 5 (excellent)
+Conclusion
+
+Leave a comment on this correction
+
+* Comment
