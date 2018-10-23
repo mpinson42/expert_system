@@ -61,8 +61,7 @@ def set_true_value(table):
 			table.remove(i)
 			i = i [ 1:]
 			if(i == ''):
-				print "error = "
-				sys.exit()
+				return []
 			i = i.split(',');
 			for val in i:
 				if('!' in val or '(' in val or ')' in val or '+' in val or '^' in val or '|' in val or ' ' in val or len(val) == 0):
@@ -175,9 +174,9 @@ def format(tab):
 		tab[i] = tab[i].replace("(", " ( ")
 		tab[i] = tab[i].replace(")", " ) ")
 		if(tab[i].count("<=>") == 1):
-			tab[i] = tab[i].replace("<=>", " <=> ")
-		elif (tab[1].count("=>") == 1):
-			tab[i] = tab[i].replace("=>", " => ")
+			tab[i] = tab[i].replace("<=>", " = ")
+		elif (tab[i].count("=>") == 1):
+			tab[i] = tab[i].replace("=>", " = > ")
 		else:
 			print "error"
 			sys.exit()
