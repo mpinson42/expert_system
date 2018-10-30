@@ -90,9 +90,11 @@ def editDictionary(symbol, isTrue, isFalse):
     if not symbolFound:
         return error_found("Symbol {0} doesn't exits".format(symbol))
     index = values["name"].index(symbol)
-    if isTrue:
+    if isTrue and values["state_true"][index] != isTrue:
+        values["isUnchanged"] = False
         values["state_true"][index] = True
-    if isFalse:
+    if isFalse and values["state_false"][index] != isFalse:
+        values["isUnchanged"] = False
         values["state_false"][index] = True
 
 def addToDictionary(symbol, isTrue):
@@ -290,7 +292,7 @@ def simplifyExpression (expression):
     expression_cpy = list()
     for symbol in tokens:
         if (is_number(symbol)):
-            if (isLogicalStateFromDictionaryStated(symbol) == True):
+            if (isLogicalStateFromDictionaryStated(symbol) == True and not peek(expression_cpy) == '!'):
                 if getLogicalStateFromDictionary(symbol):
                     expression_cpy.append("true")
                 else:
@@ -343,14 +345,20 @@ def applyInferences(symplifiedExpression):
             verbose("\t{0} is false".format(nextSymbol))
 
 def infer(evaluatedExpression, symplifiedExpression):
-    verbose(evaluatedExpression)
-    verbose(symplifiedExpression)
+    verbose("Start inference")
+    verbose("LHS expression result = {0}".format(evaluatedExpression))
+    verbose("Symplified RHS expression = {0}".format(symplifiedExpression))
     if (evaluatedExpression != 'true'):
         verbose("Nothing to infer")
         return
     verbose("inference Possible")
+    if (symplifiedExpression[0] == 'true'):
+        verbose("\tNo further conclusion to infer")
+        return
+    if (symplifiedExpression[0] == 'false' and evaluatedExpression == 'true'):
+        print("\tParadox in expression Found")
     if ('|' in symplifiedExpression):
-        verbose("No conclusion can be made")
+        verbose("\tNo conclusion can be made")
         return
     symplifiedExpression.reverse()
     verbose(symplifiedExpression)
@@ -359,29 +367,24 @@ def infer(evaluatedExpression, symplifiedExpression):
 
 def printDictionary(asVerbose):
     i = 0
+    verbose("State of Variables")
     for name in values["name"]:
         chain = None
         if (values["state_true"][i] and values["state_false"][i]):
             chain = "Paradox"
         elif (not values["state_true"][i] and not values["state_false"][i]):
-            chain = "False (unexplicitly)"
+            chain = "False (implicitly)"
         elif (values["state_true"][i]):
             chain = "True"
         else:
             chain = "False"
         if asVerbose:
-            verbose("{0} is {1}".format(name, chain))
+            verbose("\t{0} is {1}".format(name, chain))
         else:
-            print("{0} is {1}".format(name, chain))
+            print("\t{0} is {1}".format(name, chain))
         i += 1
 
-def main():
-    addToDictionary('A', True)
-    addToDictionary('B', False)
-    addToDictionary('E', False)
-    addToDictionary('G', False)
-    expression = "A | ! B > E + G"
-    print expression
+def evaluateStatement(expression):
     expressionsides = expression.split(" > ")
     verbose(expressionsides)
     expressionLeftSide = expressionsides[0]
@@ -391,9 +394,31 @@ def main():
     symplifiedExpression = simplifyExpression(expressionRightSide)
     verbose(symplifiedExpression)
     infer(evaluatedExpressionResult, symplifiedExpression)
+    print expression
+
+def setUpDictionary(stated_as_true, unexplicitly_stated_as_false):
+    for true_statement in stated_as_true:
+        addToDictionary(true_statement, True)
+    for false_statement in unexplicitly_stated_as_false:
+        addToDictionary(false_statement, False)
+
+def checkForParadox():
+    count = 0
+    for name in values["name"]:
+        if (values["state_true"][count] and values["state_false"][count]):
+            print "Paradox found: {0}".format(name)
+        count += 1
+
+def main(stated_as_true, unexplicitly_stated_as_false, chr_value, logicalExpressions):
+    setUpDictionary(stated_as_true, unexplicitly_stated_as_false)
+    printDictionary(False)
+    while values["isUnchanged"] == False:
+        values["isUnchanged"] = True
+        for logicalExpression in logicalExpressions:
+            evaluateStatement(logicalExpression)
     printDictionary(False)
 
-values = {"name":[], "state_true": [], "state_false": []}
+values = {"name":[], "state_true": [], "state_false": [], "isUnchanged": False}
 verboseEnabled = True
 
 if __name__ == '__main__':

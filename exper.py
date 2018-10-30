@@ -2,6 +2,7 @@
 #-*- coding: utf-8 -*-
 import sys
 import inferences
+import calc
 from inferences import solve
 
 from pprint import pprint
@@ -238,4 +239,5 @@ if ( __name__ == "__main__"):
 	print false_char 	 #valeur fause
 	print chr_value 	 #les valeur qu'on cherche
 	print table 		 #les ligne a executer au fur est a mesur, elle sont tout vrais !
-	inferences.solve(table, true_value,false_char, chr_value)
+	#inferences.solve(table, true_value,false_char, chr_value)
+	calc.main(true_value, false_char, chr_value, table)
