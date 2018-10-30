@@ -199,6 +199,22 @@ def false_char_in_chr(chr_value, false_value,true_value):
 	return(false_value)
 
 
+def double_verif(tab, i):
+	new_tab = []
+	y = 0
+	while(y < i):
+		new_tab.append(tab[y])
+		y+=1
+	tab[i] = tab[i].replace("<=>", "=>")
+	expresion = tab[i].split("=>")
+	new_tab.append(expresion[1] + ' => ' + expresion[0])
+	while(y < len(tab)):
+		new_tab.append(tab[y])
+		y+=1
+
+	return(new_tab)
+
+
 def format(tab):
 	i = 0
 	if(('false' in true_value) == True or ('true' in true_value) == True or ('false' in false_char) == True or ('true' in false_char) == True):
@@ -209,7 +225,9 @@ def format(tab):
 		tab[i] = tab[i].replace("(", " ( ")
 		tab[i] = tab[i].replace(")", " ) ")
 		if(tab[i].count("<=>") == 1):
-			tab[i] = tab[i].replace("<=>", " = ")
+			tab = double_verif(tab, i)
+			i -= 1
+			#tab[i] = tab[i].replace("<=>", " = ")
 		elif (tab[i].count("=>") == 1):
 			tab[i] = tab[i].replace("=>", " > ")
 		else:
