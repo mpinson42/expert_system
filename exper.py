@@ -240,6 +240,12 @@ def format(tab):
 
 
 if ( __name__ == "__main__"):
+	verbos = False
+	if('-v' in sys.argv):
+		verbos = True
+		sys.argv.remove('-v')
+
+
 	if(len(sys.argv) == 1):
 		table = interactive_input();
 	else:
@@ -258,4 +264,4 @@ if ( __name__ == "__main__"):
 	print chr_value 	 #les valeur qu'on cherche
 	print table 		 #les ligne a executer au fur est a mesur, elle sont tout vrais !
 	#inferences.solve(table, true_value,false_char, chr_value)
-	calc.main(true_value, false_char, chr_value, table)
+	calc.main(true_value, false_char, chr_value, table, verbos)
