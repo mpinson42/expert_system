@@ -463,15 +463,19 @@ def checkForParadox():
     if paradoxFound:
         sys.exit(0)
 
+def printSeachedValues(seached_values):
+    for value in seached_values:
+
+
 def main(stated_as_true, unexplicitly_stated_as_false, chr_value, logicalExpressions):
     setUpDictionary(stated_as_true, unexplicitly_stated_as_false)
-    printDictionary(False)
+    printDictionary(True)
     while values["isUnchanged"] == False:
         values["isUnchanged"] = True
         for logicalExpression in logicalExpressions:
             evaluateStatement(logicalExpression)
         checkForParadox()
-    printDictionary(False)
+    printDictionary(True)
 
 values = {"name":[], "state_true": [], "state_false": [], "isUnchanged": False}
 verboseEnabled = True
