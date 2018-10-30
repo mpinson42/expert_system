@@ -2,7 +2,7 @@ import inspect
 import sys
 
 def verbose(text):
-    if verboseEnabled:
+    if values["verboseEnabled"]:
         print text
 
 def is_number(str):
@@ -464,10 +464,23 @@ def checkForParadox():
         sys.exit(0)
 
 def printSeachedValues(seached_values):
+    verbose("State of searched Variables")
     for value in seached_values:
+        index = values["name"].index(value)
+        chain = None
+        if (values["state_true"][index] and values["state_false"][index]):
+            chain = "Paradox"
+        elif (not values["state_true"][index] and not values["state_false"][index]):
+            chain = "False (implicitly)"
+        elif (values["state_true"][index]):
+            chain = "True"
+        else:
+            chain = "False"
+        print("\t{0} is {1}".format(values["name"][index], chain))
 
-
-def main(stated_as_true, unexplicitly_stated_as_false, chr_value, logicalExpressions):
+def main(stated_as_true, unexplicitly_stated_as_false, chr_value, logicalExpressions, verbos):
+    print verbos
+    values["verboseEnabled"] = verbos
     setUpDictionary(stated_as_true, unexplicitly_stated_as_false)
     printDictionary(True)
     while values["isUnchanged"] == False:
@@ -476,9 +489,10 @@ def main(stated_as_true, unexplicitly_stated_as_false, chr_value, logicalExpress
             evaluateStatement(logicalExpression)
         checkForParadox()
     printDictionary(True)
+    printSeachedValues(chr_value)
 
-values = {"name":[], "state_true": [], "state_false": [], "isUnchanged": False}
-verboseEnabled = True
+values = {"name":[], "state_true": [], "state_false": [], "isUnchanged": False, "verboseEnabled": False}
+#verboseEnabled = None
 
 if __name__ == '__main__':
     main()
