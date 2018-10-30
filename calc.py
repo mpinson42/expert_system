@@ -1,4 +1,5 @@
 import inspect
+import sys
 
 def verbose(text):
     if verboseEnabled:
@@ -12,6 +13,9 @@ def is_number(str):
         verbose("token {0} is a operator".format(str))
         return False
     if str.find('!') != -1:
+        verbose("token {0} is a operator".format(str))
+        return False
+    if '^' in str:
         verbose("token {0} is a operator".format(str))
         return False
     if str.find('>') != -1:
@@ -42,7 +46,7 @@ def apply_operator(operators, values):
         values.append(notOperation(right))
  
 def greater_precedence(op1, op2):
-    precedences = {'!': 3, '+' : 2, '|' : 1, '>' : 0}
+    precedences = {'!': 3, '+' : 2, '|' : 1, '^' : 1, '>' : 0}
     return precedences[op1] > precedences[op2]
 
 def evaluate(expression):
@@ -69,6 +73,11 @@ def evaluate(expression):
             operators.append(token)
     while peek(operators) is not None:
         apply_operator(operators, values)
+    if (values[0] != 'true' and values[0] != 'false'):
+        if getLogicalStateFromDictionary(values[0]):
+            values[0] = 'true'
+        else:
+            values[0] = 'false'
     verbose("value:\t\t{0}".format(values))
     verbose("operators:\t{0}".format(operators))
     verbose("tokens:\t\t{0}".format(tokens))
@@ -188,6 +197,9 @@ def andOperation(lhs, rhs):
 def orOperation(lhs, rhs):
     return (getLogicalStateFromDictionary(lhs) or getLogicalStateFromDictionary(rhs))
 
+def xorOperation(lhs, rhs):
+    return (getLogicalStateFromDictionary(lhs) ^ getLogicalStateFromDictionary(rhs))
+
 def notOperation(rhs):
     verbose("Do operation:\n\toperator: !, rhs: {0}".format(rhs))
     if getLogicalStateFromDictionary(rhs):
@@ -208,6 +220,13 @@ def doOperation(operator, lhs, rhs):
             return ("false")
     if (operator == '|'):
         if (orOperation(lhs,rhs)):
+            verbose("\tResult = true")
+            return ("true")
+        else:
+            verbose("\tResult = false")
+            return ("false")
+    if (operator == '^'):
+        if (xorOperation(lhs,rhs)):
             verbose("\tResult = true")
             return ("true")
         else:
@@ -238,6 +257,35 @@ def orOperationSymplification(lhs, rhs):
         return lhs
     verbose("\tUnsimplifiable")
     return (lhs + " | " + rhs)
+
+def xorOperationSymplification(lhs, rhs):
+    verbose("Syplification of:\n\toperator: ^, lhs: {0}, rhs: {1}".format(lhs, rhs))
+    if (lhs == 'true' and rhs == 'true'):
+        verbose("\tSymplified statement: false")
+        return 'true'
+    if (lhs == 'false' and rhs == 'false'):
+        verbose("\tSymplified statement: false")
+        return 'false'
+    if (lhs == 'true' and rhs == 'false'):
+        verbose("\tSymplified statement: false")
+        return 'true'
+    if (lhs == 'false' and rhs == 'true'):
+        verbose("\tSymplified statement: false")
+        return 'true'
+    if (lhs == 'false' and rhs != 'true' and rhs != 'false'):
+        verbose("\tSymplified statement: {0}".format(rhs))
+        return rhs
+    if (rhs == 'false' and lhs != 'true' and lhs != 'false'):
+        verbose("\tSymplified statement: {0}".format(lhs))
+        return lhs
+    if (lhs == 'true' and rhs != 'true' and rhs != 'false'):
+        verbose("\tSymplified statement: ! {0}".format(rhs))
+        return "! {0}".format(rhs)
+    if (rhs == 'true' and lhs != 'true' and lhs != 'false'):
+        verbose("\tSymplified statement: ! {0}".format(lhs))
+        return "! {0}".format(lhs)
+    verbose("\tUnsimplifiable")
+    return (lhs + " ^ " + rhs)
 
 def andOperationSymplification(lhs, rhs):
     verbose("\tSyplification of:\n\toperator: +, lhs: {0}, rhs: {1}".format(lhs, rhs))
@@ -274,6 +322,8 @@ def doOperationSymplification(operator, lhs, rhs):
         return (andOperationSymplification(lhs,rhs))
     if (operator == '|'):
         return (orOperationSymplification(lhs,rhs))
+    if (operator == '^'):
+        return (xorOperationSymplification(lhs, rhs))
 
 def apply_operation_simplification(operators, values):
     verbose(values)
@@ -357,7 +407,7 @@ def infer(evaluatedExpression, symplifiedExpression):
         return
     if (symplifiedExpression[0] == 'false' and evaluatedExpression == 'true'):
         print("\tParadox in expression Found")
-    if ('|' in symplifiedExpression):
+    if ('|' in symplifiedExpression or '^' in symplifiedExpression):
         verbose("\tNo conclusion can be made")
         return
     symplifiedExpression.reverse()
@@ -404,10 +454,14 @@ def setUpDictionary(stated_as_true, unexplicitly_stated_as_false):
 
 def checkForParadox():
     count = 0
+    paradoxFound = False
     for name in values["name"]:
         if (values["state_true"][count] and values["state_false"][count]):
             print "Paradox found: {0}".format(name)
+            paradoxFound = True
         count += 1
+    if paradoxFound:
+        sys.exit(0)
 
 def main(stated_as_true, unexplicitly_stated_as_false, chr_value, logicalExpressions):
     setUpDictionary(stated_as_true, unexplicitly_stated_as_false)
@@ -416,6 +470,7 @@ def main(stated_as_true, unexplicitly_stated_as_false, chr_value, logicalExpress
         values["isUnchanged"] = True
         for logicalExpression in logicalExpressions:
             evaluateStatement(logicalExpression)
+        checkForParadox()
     printDictionary(False)
 
 values = {"name":[], "state_true": [], "state_false": [], "isUnchanged": False}
