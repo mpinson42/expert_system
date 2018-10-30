@@ -16,42 +16,47 @@ def checkForContradiction(stated_true_value_table, stated_false_value_table):
     return paradoxDetected
 
 def isOperator(symbol):
-    if '+' in symbol:
+    if '+' == symbol:
         print "and found"
         return priorityLevelAnd
-    if '|' in symbol:
+    if '|' == symbol:
         print "or found"
         return priorityLevelOr
-    if '^' in symbol:
+    if '^' == symbol:
         print "xor found"
         return priorityLevelXor
-    if "=>" in symbol:
+    if ">" == symbol:
         print "implication found"
         return priorityLevelImplication
-    if ">" in symbol:
-        print "implication found"
+    if "=" == symbol:
+        print "equivalence found"
         return priorityLevelImplication
-    if "=" in symbol:
-        print "implication found"
-        return priorityLevelImplication
-    if "!" in symbol:
+    if "!" == symbol:
         print "! found"
         return priorityLevelNot
-    if "(" in symbol:
+    if "(" == symbol:
         print "( found"
         return priorityParenthesisOpenining
-    if ")" in symbol:
+    if ")" == symbol:
         print ") found"
         return priorityParenthesisClosing
     return 0
 
-###need to implement () management
-def reversePolishNotation(premice):
-    symbolsSplitedPremice = premice.split(" ")
-    print symbolsSplitedPremice
+#def resolveStatement()
+#    return 0
+'''
+def reversePolishNotationRight(premice):
+    #symbolsSplitedPremice = premice.split(" ")
+    print premice
     operatorStack = list()
-    postfixList = list()
-    for symbol in symbolsSplitedPremice:
+    postfixListLeft = list()
+    postfixListRight = list()
+    logicalLink = "null"
+
+    print len(premice)
+    if len(premice) == 1:
+        return (premice)
+    for symbol in premice:
         print "current symbol = " + symbol
         if (isOperator(symbol) == priorityLevelImplication):
             break
@@ -69,38 +74,105 @@ def reversePolishNotation(premice):
                     print "symbol"
                     print isOperator(symbol)
                     if (isOperator(symbolInOpStack) < isOperator(symbol)):
-                        postfixList += symbolInOpStack
+                        postfixListLeft += symbolInOpStack
                         operatorStack.remove(symbolInOpStack)
                 operatorStack += symbol
-                print postfixList
+                print postfixListLeft
                 continue
-        postfixList += symbol
+        postfixListLeft += symbol
     for symbolInOpStack in operatorStack:
-        postfixList += symbolInOpStack
+        postfixListLeft += symbolInOpStack
     for symbolInOpStack in operatorStack:
         operatorStack.remove(symbolInOpStack)
-    for symbolSelected in postfixList:
-       symbolsSplitedPremice.remove(symbolSelected)
+    for symbolSelected in postfixListLeft:
+       premice.remove(symbolSelected)
     print "\t" + symbol
-    print "postfixList contains:"
-    print postfixList
+    print "postfixListLeft contains:"
+    print postfixListLeft
     print "operation stack contains:"
     print operatorStack
-    print symbolsSplitedPremice
-    return postfixList
+    print premice
 
+    return postfixListLeft
 
+###need to implement () management
+def reversePolishNotation(premice):
+    #symbolsSplitedPremice = premice.split(" ")
+    print premice
+    operatorStack = list()
+    postfixListLeft = list()
+    postfixListRight = list()
+    logicalLink = "null"
+
+    print len(premice)
+    if len(premice) == 1:
+        return (premice)
+    for symbol in premice:
+        print "current symbol = " + symbol
+        if (isOperator(symbol) == priorityLevelImplication):
+            break
+        currentSymbolValue = isOperator(symbol)
+        if currentSymbolValue != 0:
+            if (currentSymbolValue == priorityParenthesisOpenining):
+                operatorStack+=symbol
+            elif (currentSymbolValue == priorityParenthesisClosing):
+                symbolToRemove = list()
+                for symbolInOpStack in operatorStack:
+                    print "empty stack-------------------------"
+                    if (isOperator(symbolInOpStack) == priorityParenthesisOpenining):
+                        symbolToRemove += symbolInOpStack
+                        break
+                    postfixListLeft += symbolInOpStack
+                    symbolToRemove += symbolInOpStack
+                for nexSymbolToRemove in symbolToRemove:
+                    operatorStack.remove(nexSymbolToRemove)
+            else:
+                for symbolInOpStack in operatorStack:
+                    #print "symbolInOpStack val ="
+                    #print isOperator(symbolInOpStack)
+                    #print "symbol"
+                    #print isOperator(symbol)
+                    if (isOperator(symbolInOpStack) < isOperator(symbol) and symbol != ')'):
+                        postfixListLeft += symbolInOpStack
+                        operatorStack.remove(symbolInOpStack)
+                operatorStack += symbol
+                #print postfixListLeft
+                continue
+        postfixListLeft += symbol
+    for symbolInOpStack in operatorStack:
+        postfixListLeft += symbolInOpStack
+    for symbolInOpStack in operatorStack:
+        operatorStack.remove(symbolInOpStack)
+    #for symbolSelected in postfixListLeft:
+    #    premice.remove(symbolSelected)
+#    print "\t" + symbol
+#    print "postfixListLeft contains:"
+#    print postfixListLeft
+#    print "operation stack contains:"
+#    print operatorStack
+#    print premice
+    logicalLink = premice[0]
+    premice.remove('>')
+    print "working on right side"
+    postfixListRight = reversePolishNotationRight(premice)
+    print "done working on right side"
+    print postfixListLeft
+    print logicalLink
+    print postfixListRight
+    print "\n\n\n--------------------------"
+    return postfixListLeft
+'''
 
 def solveReversePolishNotation(revPolishPremice):
     print "solve expression"
 
 def applyImplication(premice, stated_true_value_table, stated_false_value_table, searched_value_table):
     print "applying implication to " + premice
-    revPolishPremice = reversePolishNotation(premice)
+    revPolishPremice = reversePolishNotation(premice.split(" "))
 
 
 def solve(premice_table, stated_true_value_table, stated_false_value_table, searched_value_table):
-    checkForContradiction(stated_true_value_table, stated_false_value_table)
+    #checkForContradiction(stated_true_value_table, stated_false_value_table)
 
     for premice in premice_table:
         applyImplication(premice, stated_true_value_table, stated_false_value_table, searched_value_table)
