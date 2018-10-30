@@ -53,6 +53,37 @@ def init_table():
 		count += 1
 	return table
 
+
+def interactive_input():
+	string = "oui"
+	text = ""
+	table = []
+	while(string != ""):
+		string = raw_input()
+		text += string + '\n'
+
+	text = text.replace("\t","")
+	text = text.split('\n')
+
+	count = 0
+	for i in text:
+		try:
+			sharp = i.index("#")
+			i = i[:sharp]
+			if len(i) == 0 and is_tabu(i):
+				continue
+			i = ' '.join(i.split())
+			table.append(i)
+		except:
+			if len(i) != 0 and is_tabu(i) == 0:
+				i = ' '.join(i.split())
+				table.append(i)
+		count += 1
+	return table
+
+
+
+
 def set_true_value(table):
 	true_value = []
 	count = 0;
@@ -169,6 +200,9 @@ def false_char_in_chr(chr_value, false_value,true_value):
 
 def format(tab):
 	i = 0
+	if(('false' in true_value) == True or ('true' in true_value) == True or ('false' in false_char) == True or ('true' in false_char) == True):
+		print 'forbident name of variable true ou false'
+		sys.exit()
 	while(i < len(tab)):
 		tab[i] = tab[i].replace("!", " ! ")
 		tab[i] = tab[i].replace("(", " ( ")
@@ -187,13 +221,17 @@ def format(tab):
 
 
 if ( __name__ == "__main__"):
-	table = init_table()
+	if(len(sys.argv) == 1):
+		table = interactive_input();
+	else:
+		table = init_table()
 	true_value = set_true_value(table)
 	chr_value = set_chr_value(table)
 	false_char = parsing_corp(table, true_value)
 	false_char = false_char_in_chr(chr_value, false_char, true_value)
 	braket(table)
 	table = format(table)
+
 
 	#print text
 	print true_value     #valeur vrais
