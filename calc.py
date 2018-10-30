@@ -374,7 +374,6 @@ def simplifyExpression (expression):
     while peek(operators) is not None:
         apply_operation_simplification(operators, values)
     finalValue = []
-    print "values in memory --------------- {0}".format(values)
     for value in values:
         for token in value.split(" "):
             finalValue.append(token)
