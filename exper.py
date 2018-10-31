@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 import sys
-import inferences
 import calc
-from inferences import solve
 
 from pprint import pprint
 
