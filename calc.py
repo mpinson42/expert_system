@@ -444,7 +444,7 @@ def evaluateStatement(expression):
     symplifiedExpression = simplifyExpression(expressionRightSide)
     verbose(symplifiedExpression)
     infer(evaluatedExpressionResult, symplifiedExpression)
-    print expression
+    verbose(expression)
 
 def setUpDictionary(stated_as_true, unexplicitly_stated_as_false):
     for true_statement in stated_as_true:
@@ -464,7 +464,7 @@ def checkForParadox():
         sys.exit(0)
 
 def printSeachedValues(seached_values):
-    verbose("State of searched Variables")
+    print ("State of searched Variables")
     for value in seached_values:
         index = values["name"].index(value)
         chain = None
@@ -479,8 +479,14 @@ def printSeachedValues(seached_values):
         print("\t{0} is {1}".format(values["name"][index], chain))
 
 def main(stated_as_true, unexplicitly_stated_as_false, chr_value, logicalExpressions, verbos):
-    print verbos
     values["verboseEnabled"] = verbos
+    verbose("Verbosity enabled")
+    verbose("Values stated as true: {0}".format(stated_as_true))
+    verbose("Values stated as false: {0}".format(unexplicitly_stated_as_false))
+    verbose("Values searched: {0}".format(chr_value))
+    verbose("table of execution: {0}".format(logicalExpressions))
+
+
     setUpDictionary(stated_as_true, unexplicitly_stated_as_false)
     printDictionary(True)
     while values["isUnchanged"] == False:

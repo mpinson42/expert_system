@@ -263,9 +263,5 @@ if ( __name__ == "__main__"):
 
 
 	#print text
-	print true_value     #valeur vrais
-	print false_char 	 #valeur fause
-	print chr_value 	 #les valeur qu'on cherche
-	print table 		 #les ligne a executer au fur est a mesur, elle sont tout vrais !
 	#inferences.solve(table, true_value,false_char, chr_value)
 	calc.main(true_value, false_char, chr_value, table, verbos)
