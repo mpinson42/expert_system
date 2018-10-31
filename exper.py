@@ -33,10 +33,14 @@ def init_table():
 		print "file"
 		sys.exit()
 
-	text = open(sys.argv[1], "r")
-	text = text.read()
-	text = text.replace("\t","")
-	text = text.split('\n')
+	try:
+		text = open(sys.argv[1], "r")
+		text = text.read()
+		text = text.replace("\t","")
+		text = text.split('\n')
+	except:
+		print 'error open'
+		sys.exit()
 
 	count = 0
 	for i in text:
